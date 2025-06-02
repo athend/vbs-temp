@@ -12,10 +12,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: flex-start;
+      padding-top: 30px;
+      min-height: 100vh;
       transition: background-color 0.5s;
     }
+
     #scanner-container {
       width: 100%;
       max-width: 600px;
@@ -24,9 +26,39 @@
       border-radius: 10px;
       overflow: hidden;
     }
+
     #output {
       font-size: 2em;
       margin-top: 20px;
+      text-align: center;
+    }
+
+    #scanned-list {
+      margin-top: 20px;
+      max-height: 250px;
+      overflow-y: auto;
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    #scanned-users {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #scanned-users li {
+      padding: 6px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.2em;
       text-align: center;
     }
   </style>
@@ -35,9 +67,20 @@
   <div id="scanner-container"></div>
   <div id="output">Scan your barcode...</div>
 
+  <div id="scanned-list">
+    <h3>Checked In:</h3>
+    <ul id="scanned-users"></ul>
+  </div>
+
+  <!-- Success sound -->
+  <audio id="success-sound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
+
   <script src="https://unpkg.com/@ericblade/quagga2/dist/quagga.js"></script>
   <script>
     const output = document.getElementById("output");
+    const scannedList = document.getElementById("scanned-users");
+    const scannedUsers = new Set();
+    const successSound = document.getElementById("success-sound");
     let scanning = false;
 
     function greetStudent(id) {
@@ -50,18 +93,26 @@
             const name = data.name;
             document.body.style.backgroundColor = "#4CAF50";
             output.textContent = `Welcome, ${name}!`;
-            speechSynthesis.speak(new SpeechSynthesisUtterance(`Welcome, ${name}`));
+
+            // Play sound
+            successSound.currentTime = 0;
+            successSound.play();
+
+            if (!scannedUsers.has(id)) {
+              scannedUsers.add(id);
+              const li = document.createElement("li");
+              li.textContent = `${name} (${id})`;
+              scannedList.appendChild(li);
+            }
           } else {
             document.body.style.backgroundColor = "#f44336";
             output.textContent = "ID not recognized.";
-            speechSynthesis.speak(new SpeechSynthesisUtterance("ID not recognized"));
           }
         })
         .catch(err => {
           console.error("Fetch error:", err);
           document.body.style.backgroundColor = "#f44336";
           output.textContent = "Connection error.";
-          speechSynthesis.speak(new SpeechSynthesisUtterance("Connection error"));
         })
         .finally(() => {
           setTimeout(() => {
@@ -77,7 +128,7 @@
         type: "LiveStream",
         target: document.querySelector('#scanner-container'),
         constraints: {
-          facingMode: "environment"
+          facingMode: "user"
         },
       },
       decoder: {
@@ -91,7 +142,7 @@
       }
       Quagga.start();
     });
-    greetStudent(2025001);
+
     Quagga.onDetected((result) => {
       if (!scanning) {
         scanning = true;
