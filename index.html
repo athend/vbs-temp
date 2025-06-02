@@ -20,7 +20,15 @@
 
     #logo {
       max-width: 200px;
+      margin-bottom: 10px;
+    }
+
+    #title {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: white;
       margin-bottom: 20px;
+      text-align: center;
     }
 
     #scanner-container {
@@ -72,9 +80,10 @@
 </head>
 <body>
   <img id="logo" src="logo.png" alt="Logo" />
+  <h1 id="title">VBS Science Lab</h1>
 
   <div id="scanner-container"></div>
-  <div id="output">Scan your barcode...</div>
+  <div id="output">Scan your Lab ID...</div>
 
   <div id="scanned-list">
     <h3>Checked In:</h3>
@@ -103,7 +112,6 @@
             document.body.style.backgroundColor = "#4CAF50";
             output.textContent = `Welcome, ${name}!`;
 
-            // Play sound
             successSound.currentTime = 0;
             successSound.play();
 
