@@ -12,8 +12,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 30px 20px;
+      justify-content: flex-start;
+      padding-top: 30px;
       min-height: 100vh;
+      transition: background-color 0.5s;
     }
 
     #logo {
@@ -21,19 +23,9 @@
       margin-bottom: 20px;
     }
 
-    .scanner-layout {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 20px;
-      width: 100%;
-      max-width: 1200px;
-    }
-
     #scanner-container {
-      flex: 1 1 600px;
+      width: 100%;
+      max-width: 600px;
       aspect-ratio: 4/3;
       border: 5px solid #444;
       border-radius: 10px;
@@ -41,21 +33,23 @@
       background: white;
     }
 
-    #scanned-list {
-      flex: 1 1 300px;
-      background: white;
-      border-radius: 8px;
-      padding: 10px;
-      max-height: 400px;
-      overflow-y: auto;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-
     #output {
       font-size: 2em;
       margin-top: 20px;
       text-align: center;
       color: #fff;
+    }
+
+    #scanned-list {
+      margin-top: 20px;
+      max-height: 250px;
+      overflow-y: auto;
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
 
     #scanned-users {
@@ -74,33 +68,18 @@
       font-size: 1.2em;
       text-align: center;
     }
-
-    @media (max-width: 768px) {
-      .scanner-layout {
-        flex-direction: column;
-        align-items: center;
-      }
-      #scanner-container,
-      #scanned-list {
-        width: 100%;
-        max-width: 600px;
-      }
-    }
   </style>
 </head>
 <body>
   <img id="logo" src="logo.png" alt="Logo" />
 
-  <div class="scanner-layout">
-    <div id="scanner-container"></div>
-
-    <div id="scanned-list">
-      <h3>Checked In:</h3>
-      <ul id="scanned-users"></ul>
-    </div>
-  </div>
-
+  <div id="scanner-container"></div>
   <div id="output">Scan your barcode...</div>
+
+  <div id="scanned-list">
+    <h3>Checked In:</h3>
+    <ul id="scanned-users"></ul>
+  </div>
 
   <!-- Success sound -->
   <audio id="success-sound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
@@ -124,6 +103,7 @@
             document.body.style.backgroundColor = "#4CAF50";
             output.textContent = `Welcome, ${name}!`;
 
+            // Play sound
             successSound.currentTime = 0;
             successSound.play();
 
