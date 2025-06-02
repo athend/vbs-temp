@@ -8,41 +8,54 @@
     body {
       margin: 0;
       font-family: sans-serif;
-      background-color: #f0f0f0;
+      background-color: #75BCC8;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding-top: 30px;
+      padding: 30px 20px;
       min-height: 100vh;
-      transition: background-color 0.5s;
+    }
+
+    #logo {
+      max-width: 200px;
+      margin-bottom: 20px;
+    }
+
+    .scanner-layout {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      width: 100%;
+      max-width: 1200px;
     }
 
     #scanner-container {
-      width: 100%;
-      max-width: 600px;
+      flex: 1 1 600px;
       aspect-ratio: 4/3;
       border: 5px solid #444;
       border-radius: 10px;
       overflow: hidden;
+      background: white;
+    }
+
+    #scanned-list {
+      flex: 1 1 300px;
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
 
     #output {
       font-size: 2em;
       margin-top: 20px;
       text-align: center;
-    }
-
-    #scanned-list {
-      margin-top: 20px;
-      max-height: 250px;
-      overflow-y: auto;
-      width: 100%;
-      max-width: 600px;
-      background: white;
-      border-radius: 8px;
-      padding: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      color: #fff;
     }
 
     #scanned-users {
@@ -61,16 +74,33 @@
       font-size: 1.2em;
       text-align: center;
     }
+
+    @media (max-width: 768px) {
+      .scanner-layout {
+        flex-direction: column;
+        align-items: center;
+      }
+      #scanner-container,
+      #scanned-list {
+        width: 100%;
+        max-width: 600px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div id="scanner-container"></div>
-  <div id="output">Scan your barcode...</div>
+  <img id="logo" src="logo.png" alt="Logo" />
 
-  <div id="scanned-list">
-    <h3>Checked In:</h3>
-    <ul id="scanned-users"></ul>
+  <div class="scanner-layout">
+    <div id="scanner-container"></div>
+
+    <div id="scanned-list">
+      <h3>Checked In:</h3>
+      <ul id="scanned-users"></ul>
+    </div>
   </div>
+
+  <div id="output">Scan your barcode...</div>
 
   <!-- Success sound -->
   <audio id="success-sound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
@@ -94,7 +124,6 @@
             document.body.style.backgroundColor = "#4CAF50";
             output.textContent = `Welcome, ${name}!`;
 
-            // Play sound
             successSound.currentTime = 0;
             successSound.play();
 
@@ -116,7 +145,7 @@
         })
         .finally(() => {
           setTimeout(() => {
-            document.body.style.backgroundColor = "#f0f0f0";
+            document.body.style.backgroundColor = "#75BCC8";
             output.textContent = "Scan your barcode...";
             scanning = false;
           }, 3000);
