@@ -129,6 +129,12 @@
     const successSound = document.getElementById("success-sound");
     let scanning = false;
 
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US';
+      window.speechSynthesis.speak(msg);
+    }
+
     function greetStudent(id) {
       const apiUrl = "https://script.google.com/macros/s/AKfycbyAYvBp0Gix8yh5E0MuEo78VVjPJ0Ex-IX8OeB40i92GQhFNozxJp8wJH6MdndOIEqP/exec?id=" + id;
 
@@ -143,6 +149,9 @@
             // Play success sound
             successSound.currentTime = 0;
             successSound.play();
+
+            // Speak welcome message
+            speak(`Welcome, ${name}`);
 
             if (!scannedUsers.has(id)) {
               scannedUsers.add(id);
@@ -163,7 +172,7 @@
         .finally(() => {
           setTimeout(() => {
             document.body.style.backgroundColor = "#75BCC8";
-            output.textContent = "Scan your barcode...";
+            output.textContent = "Scan your Lab ID...";
             scanning = false;
           }, 3000);
         });
@@ -174,7 +183,7 @@
         type: "LiveStream",
         target: document.querySelector('#scanner-container'),
         constraints: {
-          facingMode: "environment"  // front-facing camera
+          facingMode: "environment"
         },
       },
       decoder: {
