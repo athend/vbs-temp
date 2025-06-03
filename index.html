@@ -144,14 +144,14 @@
           if (data.success) {
             const name = data.name;
             document.body.style.backgroundColor = "#4CAF50";
-            output.textContent = `Welcome, ${name}!`;
+            output.textContent = `Welcome to the lab, ${name}!`;
 
             // Play success sound
             successSound.currentTime = 0;
             successSound.play();
 
             // Speak welcome message
-            speak(`Welcome, ${name}`);
+            speak(`Welcome to the lab, ${name}`);
 
             if (!scannedUsers.has(id)) {
               scannedUsers.add(id);
